@@ -18,7 +18,7 @@ const start = async () => {
             .catch((err) => console.log(err));
 
         httpServer.listen(PORT, () => {
-            console.log(`Server is running at http://localhost:${PORT}`);
+            console.log(`Server is running at http://localhost:${PORT}\nWebSocket Server listening on ws://localhost:${PORT}`);
         });
     } catch (e) {
         console.log(e);
