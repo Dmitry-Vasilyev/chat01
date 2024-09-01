@@ -1,8 +1,9 @@
 const Router = require('express').Router;
 const UserController = require('../controllers/UserController');
 const UserService = require('../services/UserService');
+const hashUtil = require('../utils/hashUtil');
 
-const userService = new UserService();
+const userService = new UserService(hashUtil);
 const userController = new UserController(userService);
 
 const authRouter = new Router();
