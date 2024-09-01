@@ -4,7 +4,7 @@ class UserController {
     }
     async registration (req, res, next) {
         try {
-
+            const {email, password} = req.body;
         } catch (e) {
             console.log(e);
         }
