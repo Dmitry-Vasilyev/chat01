@@ -3,6 +3,7 @@ class UserController {
         this.userService = userService;
 
         this.registration = this.registration.bind(this);
+        this.login = this.login.bind(this);
     }
 
     async registration (req, res, next) {
@@ -19,7 +20,11 @@ class UserController {
 
     async login (req, res, next) {
         try {
+            const {email, password} = req.body;
+            const userAuthData = await this.userService.login(email, password);
 
+            res.cookie('refreshToken', userAuthData.refreshToken, { maxAge: 30 * 60 * 100, httpOnly: true });
+            res.json(userAuthData);
         } catch (e) {
             console.log(e);
         }
