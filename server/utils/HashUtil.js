@@ -3,11 +3,11 @@ const bcrypt = require('bcrypt');
 class HashUtil {
     async hashPassword(password) {
         const saltRounds = 10;
-        return bcrypt.hash(password, saltRounds);
+        return await bcrypt.hash(password, saltRounds);
     }
 
     async comparePassword(password, hash) {
-        return bcrypt.compare(password, hash);
+        return await bcrypt.compare(password, hash);
     }
 }
 
