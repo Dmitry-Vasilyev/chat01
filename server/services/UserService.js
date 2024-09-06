@@ -38,6 +38,7 @@ class UserService {
 
         const userDto = new UserDto(user);
         const tokens = this.tokenService.generateToken({...userDto});
+        await this.tokenService.saveToken(tokens.refreshToken, userDto.id);
 
         return new UserAuthDto({...userDto}, tokens.refreshToken, tokens.accessToken);
     }
