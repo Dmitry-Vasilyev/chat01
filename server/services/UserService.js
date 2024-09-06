@@ -42,6 +42,14 @@ class UserService {
 
         return new UserAuthDto({...userDto}, tokens.refreshToken, tokens.accessToken);
     }
+
+    async logout(refreshToken) {
+        const deletedCount = await this.tokenService.removeToken(refreshToken);
+
+        if (deletedCount === 0) {
+            throw new Error(`You are not logged in`);
+        }
+    }
 }
 
 module.exports = UserService;
