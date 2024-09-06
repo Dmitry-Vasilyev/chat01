@@ -11,6 +11,7 @@ class TokenService {
 
     async saveToken(refreshToken, userId) {
         const tokenData = await TokenModel.findOne({user: userId});
+
         if (tokenData) {
             tokenData.refreshToken = refreshToken;
             return tokenData.save();
@@ -18,6 +19,11 @@ class TokenService {
 
         const token = await TokenModel.create({user: userId, refreshToken});
         return token;
+    }
+
+    async removeToken(refreshToken) {
+        const {deletedCount} = await TokenModel.deleteOne({refreshToken});
+        return deletedCount;
     }
 }
 
