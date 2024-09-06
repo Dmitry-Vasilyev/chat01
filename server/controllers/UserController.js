@@ -4,6 +4,7 @@ class UserController {
 
         this.registration = this.registration.bind(this);
         this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     async registration (req, res, next) {
@@ -32,7 +33,11 @@ class UserController {
 
     async logout (req, res, next) {
         try {
+            const {refreshToken} = req.cookies;
+            await this.userService.logout(refreshToken);
 
+            res.clearCookie('refreshToken');
+            return res.json({message: 'Logged out'});
         } catch (e) {
             console.log(e);
         }
