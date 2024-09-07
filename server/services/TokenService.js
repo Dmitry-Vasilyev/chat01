@@ -30,6 +30,11 @@ class TokenService {
         const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
         return userData;
     }
+
+    async findToken(refreshToken) {
+        const token = await TokenModel.findOne({refreshToken});
+        return token;
+    }
 }
 
 module.exports = TokenService;
