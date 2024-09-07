@@ -5,6 +5,7 @@ class UserController {
         this.registration = this.registration.bind(this);
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     async registration (req, res, next) {
@@ -53,7 +54,11 @@ class UserController {
 
     async refresh (req, res, next) {
         try {
+            const {refreshToken} = req.cookies;
+            const userAuthData = await this.userService.refresh(refreshToken);
 
+            res.cookie('refreshToken', userAuthData.refreshToken, { maxAge: 30 * 60 * 1000, httpOnly: true });
+            res.json(userAuthData);
         } catch (e) {
             console.log(e);
         }
