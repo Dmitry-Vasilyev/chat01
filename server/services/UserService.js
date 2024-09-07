@@ -50,6 +50,26 @@ class UserService {
             throw new Error(`You are not logged in`);
         }
     }
+
+    async refresh(refreshToken) {
+        if(!refreshToken) {
+            throw new Error(`Unauthorized accessing token`);
+        }
+
+        const userData = await this.tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDB = await this.tokenService.findToken(refreshToken);
+        if(!userData || !tokenFromDB) {
+            throw new Error(`Unauthorized accessing token`);
+        }
+
+        const userDB = await UserModel.findOne(userData.id);
+        const userDto = new UserDto(userDB);
+
+        const tokens = this.tokenService.generateToken({userDto});
+        await this.tokenService.saveToken(tokens.refreshToken, userDto.id);
+
+        return new UserAuthDto({...userDto}, tokens.refreshToken, tokens.accessToken);
+    }
 }
 
 module.exports = UserService;
