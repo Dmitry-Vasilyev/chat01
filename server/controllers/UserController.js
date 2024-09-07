@@ -6,6 +6,7 @@ class UserController {
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
         this.refresh = this.refresh.bind(this);
+        this.getAllUsers = this.getAllUsers.bind(this);
     }
 
     async registration (req, res, next) {
@@ -66,7 +67,8 @@ class UserController {
 
     async getAllUsers (req, res, next) {
         try {
-
+            const users = await this.userService.getAllUsers();
+            res.json(users);
         } catch (e) {
             console.log(e);
         }
