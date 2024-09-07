@@ -70,6 +70,11 @@ class UserService {
 
         return new UserAuthDto({...userDto}, tokens.refreshToken, tokens.accessToken);
     }
+
+    async getAllUsers() {
+        const users = await UserModel.find();
+        return users;
+    }
 }
 
 module.exports = UserService;
