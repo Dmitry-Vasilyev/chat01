@@ -1,3 +1,5 @@
+const {validationResult} = require('express-validator');
+
 class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -11,6 +13,10 @@ class UserController {
 
     async registration (req, res, next) {
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             const {email, password, nickname} = req.body;
             const userAuthData = await this.userService.registration(email, password, nickname);
 
@@ -23,6 +29,11 @@ class UserController {
 
     async login (req, res, next) {
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
             const {email, password} = req.body;
             const userAuthData = await this.userService.login(email, password);
 
@@ -35,6 +46,11 @@ class UserController {
 
     async logout (req, res, next) {
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
             const {refreshToken} = req.cookies;
             await this.userService.logout(refreshToken);
 
@@ -55,6 +71,11 @@ class UserController {
 
     async refresh (req, res, next) {
         try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
             const {refreshToken} = req.cookies;
             const userAuthData = await this.userService.refresh(refreshToken);
 
