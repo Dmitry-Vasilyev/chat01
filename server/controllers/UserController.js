@@ -20,8 +20,10 @@ class UserController {
             const {email, password, nickname} = req.body;
             const userAuthData = await this.userService.registration(email, password, nickname);
 
-            res.cookie('refreshToken', userAuthData.refreshToken, { maxAge: 30 * 60 * 1000, httpOnly: true }); //30 min
-            res.json(userAuthData);
+            res.cookie('refreshToken',
+                userAuthData.refreshToken,
+                { maxAge: process.env.JWT_REFRESH_COOKIE_EXPIRE, httpOnly: true }); //30 min
+            return res.json(userAuthData);
         } catch (e) {
             console.log(e);
         }
@@ -37,8 +39,10 @@ class UserController {
             const {email, password} = req.body;
             const userAuthData = await this.userService.login(email, password);
 
-            res.cookie('refreshToken', userAuthData.refreshToken, { maxAge: 30 * 60 * 1000, httpOnly: true });
-            res.json(userAuthData);
+            res.cookie('refreshToken',
+                userAuthData.refreshToken,
+                { maxAge: process.env.JWT_REFRESH_COOKIE_EXPIRE, httpOnly: true });
+            return res.json(userAuthData);
         } catch (e) {
             console.log(e);
         }
@@ -79,7 +83,9 @@ class UserController {
             const {refreshToken} = req.cookies;
             const userAuthData = await this.userService.refresh(refreshToken);
 
-            res.cookie('refreshToken', userAuthData.refreshToken, { maxAge: 30 * 60 * 1000, httpOnly: true });
+            res.cookie('refreshToken',
+                userAuthData.refreshToken,
+                { maxAge: process.env.JWT_REFRESH_COOKIE_EXPIRE, httpOnly: true });
             res.json(userAuthData);
         } catch (e) {
             console.log(e);
