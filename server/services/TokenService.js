@@ -27,7 +27,9 @@ class TokenService {
 
     async removeToken(refreshToken) {
         const {deletedCount} = await TokenModel.deleteOne({refreshToken});
-        return deletedCount;
+        if(deletedCount === 0) {
+            throw new Error(`User with refreshToken ${refreshToken} does not exist`);
+        }
     }
 
     async validateRefreshToken(refreshToken) {
