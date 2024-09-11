@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 
 class HashUtil {
     async hashPassword(password) {
-        const saltRounds = 10;
+        const saltRounds = parseInt(process.env.BCRYPT_PASS_SALT);
         return await bcrypt.hash(password, saltRounds);
     }
 
