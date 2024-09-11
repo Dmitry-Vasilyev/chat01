@@ -44,11 +44,7 @@ class UserService {
     }
 
     async logout(refreshToken) {
-        const deletedCount = await this.tokenService.removeToken(refreshToken);
-
-        if (deletedCount === 0) {
-            throw new Error(`You are not logged in`);
-        }
+        await this.tokenService.removeToken(refreshToken);
     }
 
     async refresh(refreshToken) {
