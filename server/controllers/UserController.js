@@ -55,7 +55,7 @@ class UserController {
             await this.userService.logout(refreshToken);
 
             res.clearCookie('refreshToken');
-            return res.json({message: 'Logged out'});
+            return res.status(204).send();
         } catch (e) {
             console.log(e);
         }
