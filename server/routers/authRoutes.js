@@ -23,7 +23,7 @@ class AuthRoutes {
         this.authRouter.get('/refresh',
             this.authValidator.tokenValRules(),
             this.userController.refresh);
-        this.authRouter.get('/users', this.userController.getAllUsers);
+        this.authRouter.get('/users', this.userController.getUsers);
     }
 
     getRouter() {
