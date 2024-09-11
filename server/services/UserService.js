@@ -70,9 +70,19 @@ class UserService {
         return new UserAuthDto({...userDto}, tokens.refreshToken, tokens.accessToken);
     }
 
-    async getAllUsers() {
-        const users = await UserModel.find();
+    async getUsersPaginated(skip, limit) {
+        let users = await UserModel.find().skip(skip).limit(limit);
+        if(!users) {
+            throw new Error("Db error");
+        }
+
+        users = users.map((user) => new UserDto(user));
         return users;
+    }
+
+    async getUsersCount() {
+        const count = await UserModel.countDocuments();
+        return count;
     }
 }
 
