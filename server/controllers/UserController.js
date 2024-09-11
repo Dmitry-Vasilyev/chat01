@@ -8,7 +8,7 @@ class UserController {
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
         this.refresh = this.refresh.bind(this);
-        this.getAllUsers = this.getAllUsers.bind(this);
+        this.getUsers = this.getUsers.bind(this);
     }
 
     async registration (req, res, next) {
@@ -92,10 +92,21 @@ class UserController {
         }
     }
 
-    async getAllUsers (req, res, next) {
+    async getUsers (req, res, next) {
         try {
-            const users = await this.userService.getAllUsers();
-            res.json(users);
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 5;
+            const skip = (page - 1) * limit;
+
+            const users = await this.userService.getUsersPaginated(skip, limit);
+            const usersCount = await this.userService.getUsersCount();
+
+            res.json({
+                usersCount,
+                totalPages: Math.ceil(usersCount / limit),
+                currentPage: page,
+                users
+            });
         } catch (e) {
             console.log(e);
         }
