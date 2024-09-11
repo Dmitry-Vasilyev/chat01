@@ -49,12 +49,19 @@ class UserService {
 
     async refresh(refreshToken) {
         const userData = await this.tokenService.validateRefreshToken(refreshToken);
-        const tokenFromDB = await this.tokenService.findToken(refreshToken);
-        if(!userData || !tokenFromDB) {
+        if(!userData) {
             throw new Error(`Unauthorized accessing token`);
         }
 
+        const tokenFromDB = await this.tokenService.findToken(refreshToken);
+        if(!tokenFromDB) {
+            throw new Error(`No such token in DB`);
+        }
+
         const userDB = await UserModel.findById(userData.id);
+        if(!userDB) {
+            throw new Error(`No such user`);
+        }
         const userDto = new UserDto(userDB);
 
         const tokens = this.tokenService.generateToken({userDto});
