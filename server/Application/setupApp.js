@@ -5,6 +5,7 @@ const UserController = require('../controllers/UserController');
 const hashUtil = require('../utils/HashUtil');
 const AuthRoutes = require('../routers/authRoutes');
 const AuthValidator = require('../validators/AuthValidator');
+const authMiddleware = require('../middleware/authMiddleware');
 
 function getApplication() {
     const dependencies = {
@@ -13,7 +14,8 @@ function getApplication() {
         UserController,
         hashUtil,
         AuthRoutes,
-        AuthValidator
+        AuthValidator,
+        authMiddleware
     }
     return new Application(dependencies);
 }

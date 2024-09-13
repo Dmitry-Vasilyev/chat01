@@ -1,10 +1,11 @@
 const Router = require('express').Router;
 
 class AuthRoutes {
-    constructor(userController, authValidator) {
+    constructor(userController, authValidator, authMiddleware) {
         this.authRouter = new Router();
         this.userController = userController;
         this.authValidator = authValidator;
+        this.authMiddleware = authMiddleware;
 
         this.setupRoutes();
     }
@@ -23,7 +24,9 @@ class AuthRoutes {
         this.authRouter.get('/refresh',
             this.authValidator.tokenValRules(),
             this.userController.refresh);
-        this.authRouter.get('/users', this.userController.getUsers);
+        this.authRouter.get('/users',
+            this.authMiddleware,
+            this.userController.getUsers);
     }
 
     getRouter() {
