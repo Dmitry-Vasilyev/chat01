@@ -1,6 +1,11 @@
-
 class Application {
-    constructor({UserController, UserService, hashUtil, TokenService, AuthRoutes, AuthValidator, authMiddleware}) {
+    constructor({UserController = require('../controllers/UserController'),
+                    UserService = require('../services/UserService'),
+                    hashUtil = require('../utils/HashUtil'),
+                    TokenService = require('../services/TokenService'),
+                    AuthRoutes = require('../routers/authRoutes'),
+                    AuthValidator = require('../validators/AuthValidator'),
+                    authMiddleware = require('../middleware/authMiddleware')} = {}) {
         this.hashUtil = hashUtil;
         this.tokenService = new TokenService();
         this.userService = new UserService(this.hashUtil, this.tokenService);
