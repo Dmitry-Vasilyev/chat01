@@ -33,8 +33,21 @@ class TokenService {
     }
 
     async validateRefreshToken(refreshToken) {
-        const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        return userData;
+        try {
+            const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+            return userData;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async validateAccessToken(accessToken) {
+        try {
+            const userData = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
+            return userData;
+        } catch (e) {
+            return null;
+        }
     }
 
     async findToken(refreshToken) {
