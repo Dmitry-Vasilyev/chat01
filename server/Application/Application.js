@@ -1,11 +1,19 @@
+const DefaultTokenService = require('../services/TokenService');
+const DefaultUserService = require('../services/UserService');
+const DefaultUserController = require('../controllers/UserController');
+const DefaultHashUtil = require('../utils/HashUtil');
+const DefaultAuthRoutes = require('../routers/authRoutes');
+const DefaultAuthValidator = require('../validators/AuthValidator');
+const DefaulAuthMiddleware = require('../middleware/authMiddleware');
+
 class Application {
-    constructor({UserController = require('../controllers/UserController'),
-                    UserService = require('../services/UserService'),
-                    hashUtil = require('../utils/HashUtil'),
-                    TokenService = require('../services/TokenService'),
-                    AuthRoutes = require('../routers/authRoutes'),
-                    AuthValidator = require('../validators/AuthValidator'),
-                    authMiddleware = require('../middleware/authMiddleware')} = {}) {
+    constructor({UserController = DefaultUserController,
+                    UserService = DefaultUserService,
+                    hashUtil = DefaultHashUtil,
+                    TokenService = DefaultTokenService,
+                    AuthRoutes = DefaultAuthRoutes,
+                    AuthValidator = DefaultAuthValidator,
+                    authMiddleware = DefaulAuthMiddleware} = {}) {
         this.hashUtil = hashUtil;
         this.tokenService = new TokenService();
         this.userService = new UserService(this.hashUtil, this.tokenService);
