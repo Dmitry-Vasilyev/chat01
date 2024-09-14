@@ -1,0 +1,23 @@
+const Application = require("./Application");
+const TokenService = require('../services/TokenService');
+const UserService = require('../services/UserService');
+const UserController = require('../controllers/UserController');
+const hashUtil = require('../utils/HashUtil');
+const AuthRoutes = require('../routers/authRoutes');
+const AuthValidator = require('../validators/AuthValidator');
+const authMiddleware = require('../middleware/authMiddleware');
+
+function getApplication() {
+    const dependencies = {
+        TokenService,
+        UserService,
+        UserController,
+        hashUtil,
+        AuthRoutes,
+        AuthValidator,
+        authMiddleware
+    }
+    return new Application(dependencies);
+}
+
+module.exports = getApplication();
