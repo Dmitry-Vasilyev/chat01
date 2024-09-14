@@ -26,6 +26,7 @@ class UserController {
             return res.json(userAuthData);
         } catch (e) {
             console.log(e);
+            return res.status(500).json({message: 'Непредвиденная ошибка'});
         }
     }
 
@@ -45,6 +46,7 @@ class UserController {
             return res.json(userAuthData);
         } catch (e) {
             console.log(e);
+            return res.status(500).json({message: 'Непредвиденная ошибка'});
         }
     }
 
@@ -62,6 +64,7 @@ class UserController {
             return res.status(204).send();
         } catch (e) {
             console.log(e);
+            return res.status(500).json({message: 'Непредвиденная ошибка'});
         }
     }
 
@@ -70,6 +73,7 @@ class UserController {
 
         } catch (e) {
             console.log(e);
+            return res.status(500).json({message: 'Непредвиденная ошибка'});
         }
     }
 
@@ -89,6 +93,7 @@ class UserController {
             res.json(userAuthData);
         } catch (e) {
             console.log(e);
+            return res.status(500).json({message: 'Непредвиденная ошибка'});
         }
     }
 
@@ -109,6 +114,7 @@ class UserController {
             });
         } catch (e) {
             console.log(e);
+            return res.status(500).json({message: 'Непредвиденная ошибка'});
         }
     }
 }
