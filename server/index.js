@@ -5,6 +5,7 @@ const WebSocket = require('ws');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const application = require("./Application");
+const requestLogger = require("./middleware/requestLogger");
 
 
 
@@ -14,6 +15,8 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(requestLogger);
 
 const authRouter = application.getAuthRouter();
 app.use('/auth', authRouter);
