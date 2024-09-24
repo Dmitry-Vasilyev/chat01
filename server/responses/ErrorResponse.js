@@ -3,7 +3,7 @@ const Response = require('./Response');
 class ErrorResponse extends Response {
     constructor(message, statusCode = 500, errorCode = null) {
         super(statusCode, message);
-        this.error = errorCode;
+        this.errorCode = errorCode;
     }
 
     toJSON() {
