@@ -3,7 +3,7 @@ class ApiError extends Error {
         super(message);
         this.statusCode = statusCode;
         this.isOperational = isOperational;
-        this.errorsCode = errorCode;
+        this.errorCode = errorCode;
         this.errors = errors;
 
         if (stack) {
@@ -16,7 +16,7 @@ class ApiError extends Error {
         return {
             statusCode: this.statusCode,
             message: this.message,
-            errorsCode: this.errorsCode,
+            errorCode: this.errorCode,
             errors: this.errors
         };
     }
