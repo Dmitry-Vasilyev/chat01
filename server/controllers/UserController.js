@@ -1,4 +1,6 @@
 const {validationResult} = require('express-validator');
+const OkResponse = require('../responses/OkResponse');
+const ApiError = require('../exceptions/ApiError');
 
 class UserController {
     constructor(userService) {
@@ -15,7 +17,7 @@ class UserController {
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+                return next(ApiError.validationError("Ошибка валидации" ,errors.array()));
             }
             const {email, password, nickname} = req.body;
             const userAuthData = await this.userService.registration(email, password, nickname);
@@ -23,10 +25,9 @@ class UserController {
             res.cookie('refreshToken',
                 userAuthData.refreshToken,
                 { maxAge: process.env.JWT_REFRESH_COOKIE_EXPIRE, httpOnly: true }); //30 min
-            return res.json(userAuthData);
+            return res.status(201).json(OkResponse.created(`Пользователь: ${email} создан`, userAuthData).toJSON());
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({message: 'Непредвиденная ошибка'});
+            next(e);
         }
     }
 
@@ -34,7 +35,7 @@ class UserController {
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+                return next(ApiError.validationError("Ошибка валидации" ,errors.array()));
             }
 
             const {email, password} = req.body;
@@ -43,10 +44,9 @@ class UserController {
             res.cookie('refreshToken',
                 userAuthData.refreshToken,
                 { maxAge: process.env.JWT_REFRESH_COOKIE_EXPIRE, httpOnly: true });
-            return res.json(userAuthData);
+            return res.json(new OkResponse(`User logged in as ${userAuthData.user.email}`, userAuthData).toJSON());
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({message: 'Непредвиденная ошибка'});
+            next(e);
         }
     }
 
@@ -54,17 +54,16 @@ class UserController {
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+                return next(ApiError.validationError("Ошибка валидации" ,errors.array()));
             }
 
             const {refreshToken} = req.cookies;
             await this.userService.logout(refreshToken);
 
             res.clearCookie('refreshToken');
-            return res.status(204).send();
+            return res.json(new OkResponse(`User logged out`).withStatusCode(204));
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({message: 'Непредвиденная ошибка'});
+            next(e);
         }
     }
 
@@ -72,8 +71,7 @@ class UserController {
         try {
 
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({message: 'Непредвиденная ошибка'});
+            next(e);
         }
     }
 
@@ -81,7 +79,7 @@ class UserController {
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
+                return next(ApiError.validationError("Ошибка валидации" ,errors.array()));
             }
 
             const {refreshToken} = req.cookies;
@@ -90,10 +88,9 @@ class UserController {
             res.cookie('refreshToken',
                 userAuthData.refreshToken,
                 { maxAge: process.env.JWT_REFRESH_COOKIE_EXPIRE, httpOnly: true });
-            res.json(userAuthData);
+            return res.json(new OkResponse(`Token refreshed for ${userAuthData.user.email}`, userAuthData).toJSON());;
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({message: 'Непредвиденная ошибка'});
+            next(e);
         }
     }
 
@@ -106,15 +103,15 @@ class UserController {
             const users = await this.userService.getUsersPaginated(skip, limit);
             const usersCount = await this.userService.getUsersCount();
 
-            res.json({
-                usersCount,
-                totalPages: Math.ceil(usersCount / limit),
-                currentPage: page,
-                users
-            });
+            return res.json(new OkResponse("List of users",
+                {
+                    usersCount,
+                    totalPages: Math.ceil(usersCount / limit),
+                    currentPage: page,
+                    users
+                }).toJSON());
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({message: 'Непредвиденная ошибка'});
+            next(e);
         }
     }
 }
