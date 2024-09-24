@@ -1,6 +1,7 @@
 const UserModel = require("../models/UserModel");
 const UserDto = require("../dtos/UserDto");
 const UserAuthDto = require("../dtos/UserAuthDto");
+const ApiError = require('../exceptions/ApiError');
 
 class UserService {
     constructor(hashUtil, tokenService) {
@@ -11,7 +12,7 @@ class UserService {
     async registration (email, password, nickname) {
         const candidate = await UserModel.findOne({email});
         if (candidate) {
-            throw new Error(`User with email ${email} already exists`);
+            throw ApiError.conflict(`User with email ${email} already exists`, "USER_ALREADY_EXISTS");
         }
 
         const hashedPassword = await this.hashUtil.hashPassword(password);
@@ -28,12 +29,12 @@ class UserService {
     async login (email, password) {
         const user = await UserModel.findOne({email});
         if(!user) {
-            throw new Error(`User with email ${email} is not registered`);
+            throw ApiError.notFound(`User with email ${email} is not registered`);
         }
 
         const isPassEqual = await this.hashUtil.comparePassword(password, user.password);
         if(!isPassEqual) {
-            throw new Error(`User password is incorrect`);
+            throw ApiError.badRequest(`User password do not match`);
         }
 
         const userDto = new UserDto(user);
@@ -50,17 +51,17 @@ class UserService {
     async refresh(refreshToken) {
         const userData = await this.tokenService.validateRefreshToken(refreshToken);
         if(!userData) {
-            throw new Error(`Unauthorized accessing token`);
+            throw ApiError.badRequest(`Unauthorized accessing token`);
         }
 
         const tokenFromDB = await this.tokenService.findToken(refreshToken);
         if(!tokenFromDB) {
-            throw new Error(`No such token in DB`);
+            throw ApiError.notFound(`No such token in DB`);
         }
 
         const userDB = await UserModel.findById(userData.id);
         if(!userDB) {
-            throw new Error(`No such user`);
+            throw ApiError.notFound(`No such user in DB`);
         }
         const userDto = new UserDto(userDB);
 

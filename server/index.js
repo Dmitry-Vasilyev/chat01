@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const application = require("./Application");
 const requestLogger = require("./middleware/requestLogger");
+const errorMiddleware = require("./middleware/errorMiddleware");
 
 
 
@@ -20,6 +21,8 @@ app.use(requestLogger);
 
 const authRouter = application.getAuthRouter();
 app.use('/auth', authRouter);
+
+app.use(errorMiddleware);
 
 const httpServer = http.createServer(app);
 const wss = new WebSocket.Server({ server: httpServer });
