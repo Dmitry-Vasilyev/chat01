@@ -1,5 +1,6 @@
 const TokenModel = require("../models/TokenModel");
 const jwt = require("jsonwebtoken");
+const ApiError = require('../exceptions/ApiError');
 
 class TokenService {
     generateToken(payload) {
@@ -28,7 +29,7 @@ class TokenService {
     async removeToken(refreshToken) {
         const {deletedCount} = await TokenModel.deleteOne({refreshToken});
         if(deletedCount === 0) {
-            throw new Error(`User with refreshToken ${refreshToken} does not exist`);
+            throw ApiError.notFound(`User with refreshToken ${refreshToken} does not exist`);
         }
     }
 
