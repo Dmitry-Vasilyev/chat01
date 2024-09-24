@@ -3,6 +3,7 @@ const ErrorResponse = require("./ErrorResponse");
 class ValidationErrorResponse extends ErrorResponse {
     constructor(message, errors = []) {
         super(message, 422, "VALIDATION_ERROR");
+        this.errors = errors;
     }
 
     toJSON() {
