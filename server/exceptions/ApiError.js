@@ -33,6 +33,10 @@ class ApiError extends Error {
         return new ApiError(404, msg, true, errorCode);
     }
 
+    static conflict(msg, errorCode = "CONFLICT") {
+        return new ApiError(409, msg, true, errorCode);
+    }
+
     static unauthorized(msg, errorCode = "UNAUTHORIZED") {
         return new ApiError(401, msg, true, errorCode);
     }
